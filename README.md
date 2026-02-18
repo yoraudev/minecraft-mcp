@@ -49,7 +49,7 @@ java -jar mmcp.jar
 Codex CLI:
 
 ```bash
-codex mcp add minecraft-mcp -- java -jar path/to/minecraft-mcp/build/libs/mmcp.jar
+codex mcp add minecraft-mcp -- java -jar path/to/mmcp.jar
 ```
 
 <h1 align="center">MCP Tools</h1>
