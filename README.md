@@ -17,6 +17,7 @@
 - Gradle 9+
 - Minecraft 1.21.11
 - Fabric Loader 0.18.4+
+- Fabric Language Kotlin 1.13.9+kotlin.2.3.10
 
 <h1 align="center">Quick Start</h1>
 
