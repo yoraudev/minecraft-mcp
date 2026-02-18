@@ -6,13 +6,13 @@ import io.modelcontextprotocol.server.McpServer
 import io.modelcontextprotocol.server.McpSyncServer
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider
 import io.modelcontextprotocol.spec.McpSchema
+import java.net.InetSocketAddress
+import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.slf4j.LoggerFactory
-import java.net.InetSocketAddress
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.function.BiFunction
+import wtf.yoraudev.mmcp.tools.base.McpToolRegistry
 
 object McpServerRuntime {
     private const val HOST = "127.0.0.1"
@@ -20,6 +20,7 @@ object McpServerRuntime {
     private const val ENDPOINT = "/mcp"
     private val logger = LoggerFactory.getLogger("minecraft-mcp")
     private val started = AtomicBoolean(false)
+    private val objectMapper = ObjectMapper()
     private var server: McpSyncServer? = null
     private var httpServer: Server? = null
 
@@ -29,28 +30,18 @@ object McpServerRuntime {
         }
 
         runCatching {
-            val mapper = JacksonMcpJsonMapper(ObjectMapper())
+            val mapper = JacksonMcpJsonMapper(objectMapper)
             val transport = HttpServletStreamableServerTransportProvider.builder()
                 .jsonMapper(mapper)
                 .mcpEndpoint(ENDPOINT)
                 .build()
 
-            val pingTool = McpSchema.Tool.builder()
-                .name("mmcp.ping")
-                .description("Returns pong from Minecraft MCP mod.")
-                .inputSchema(McpSchema.JsonSchema("object", emptyMap(), emptyList(), false, emptyMap(), emptyMap()))
-                .build()
-
-            server = McpServer.sync(transport)
+            val specification = McpServer.sync(transport)
                 .serverInfo("minecraft-mcp", "0.1.0")
                 .capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
-                .tool(
-                    pingTool,
-                    BiFunction { _, _ ->
-                        McpSchema.CallToolResult("pong", false)
-                    }
-                )
-                .build()
+
+            McpToolRegistry(objectMapper, logger).register(specification)
+            server = specification.build()
 
             val jetty = Server(InetSocketAddress(HOST, PORT))
             val context = ServletContextHandler(ServletContextHandler.NO_SESSIONS)
