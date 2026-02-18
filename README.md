@@ -4,8 +4,6 @@
 
 <h1 align="center">Minecraft MCP</h1>
 
----
-
 <p align="center">Minecraft MCP is a Fabric mod that exposes Minecraft world capabilities to AI assistants through MCP tools and resources.</p>
 
 <p align="center">
@@ -16,16 +14,12 @@
 
 <h1 align="center">Requirements</h1>
 
----
-
 - Java 21
 - Gradle 9+
 - Minecraft 1.21.11
 - Fabric Loader 0.18.4+
 
 <h1 align="center">Quick Start and Run Modes</h1>
-
----
 
 1. Clone the repository.
 2. Open the `minecraft-mcp` directory.
@@ -50,8 +44,6 @@ java -jar build/libs/mmcp.jar
 ```
 
 <h2 align="center">Project Guidelines</h2>
-
----
 
 Please read `CONTRIBUTING.md` before opening a pull request.
 
